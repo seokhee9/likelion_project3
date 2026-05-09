@@ -3,22 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>멋쟁이사자처럼 아기사자 관리</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: 0 auto; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .card-list { margin-top: 20px; }
-        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
-        .card h3 { margin: 0 0 10px 0; color: #333; }
-        .card p { margin: 5px 0; font-size: 14px; color: #666; }
-        .delete-btn { position: absolute; top: 15px; right: 15px; background: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
-        #input-form-container { display: none; background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #ddd; }
-        .input-group { margin-bottom: 10px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .input-group input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-submit { background: #ff9d00; color: white; border: none; width: 100%; padding: 10px; cursor: pointer; font-weight: bold; border-radius: 4px; }
-        .btn-toggle { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -33,10 +18,22 @@
     </div>
 
     <div id="input-form-container">
-        <div class="input-group"><label>이름</label><input type="text" id="input-name"></div>
-        <div class="input-group"><label>파트</label><input type="text" id="input-part"></div>
-        <div class="input-group"><label>관심 기술</label><input type="text" id="input-tech"></div>
-        <div class="input-group"><label>한줄 소개</label><input type="text" id="input-bio"></div>
+        <div class="input-group">
+            <label>이름</label>
+            <input type="text" id="input-name">
+        </div>
+        <div class="input-group">
+            <label>파트</label>
+            <input type="text" id="input-part">
+        </div>
+        <div class="input-group">
+            <label>관심 기술</label>
+            <input type="text" id="input-tech">
+        </div>
+        <div class="input-group">
+            <label>한줄 소개</label>
+            <input type="text" id="input-bio">
+        </div>
         <button id="btn-add" class="btn-submit">등록하기</button>
     </div>
 
@@ -44,6 +41,7 @@
 </div>
 
 <script>
+    // 초기 데이터
     let members = [
         {
             id: Date.now(),
@@ -60,6 +58,7 @@
     const btnShowForm = document.getElementById('btn-show-form');
     const btnAdd = document.getElementById('btn-add');
 
+    // 화면 그리기 함수
     function render() {
         cardList.innerHTML = '';
         totalCount.innerText = members.length;
@@ -78,12 +77,14 @@
         });
     }
 
+    // 폼 열기/닫기
     btnShowForm.addEventListener('click', () => {
         const isVisible = formContainer.style.display === 'block';
         formContainer.style.display = isVisible ? 'none' : 'block';
         btnShowForm.innerText = isVisible ? '아기사자 추가하기' : '닫기';
     });
 
+    // 등록 기능
     btnAdd.addEventListener('click', () => {
         const name = document.getElementById('input-name').value;
         const part = document.getElementById('input-part').value;
@@ -98,11 +99,13 @@
         members.push({ id: Date.now(), name, part, tech, bio });
         render();
 
+        // 초기화
         document.querySelectorAll('input').forEach(input => input.value = '');
         formContainer.style.display = 'none';
         btnShowForm.innerText = '아기사자 추가하기';
     });
 
+    // 삭제 기능
     cardList.addEventListener('click', (e) => {
         if(e.target.classList.contains('delete-btn')) {
             const id = Number(e.target.dataset.id);
@@ -113,5 +116,6 @@
 
     render();
 </script>
+
 </body>
 </html>
