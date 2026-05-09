@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>멋쟁이사자처럼 아기사자 관리</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .card-list { margin-top: 20px; }
+        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
+        .card h3 { margin: 0 0 10px 0; color: #333; }
+        .card p { margin: 5px 0; font-size: 14px; color: #666; }
+        .delete-btn { position: absolute; top: 15px; right: 15px; background: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        #input-form-container { display: none; background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #ddd; }
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .input-group input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-submit { background: #ff9d00; color: white; border: none; width: 100%; padding: 10px; cursor: pointer; font-weight: bold; border-radius: 4px; }
+        .btn-toggle { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>아기사자 명단</h1>
+        <p>총 인원: <span id="total-count">0</span>명</p>
+    </header>
+
+    <div style="margin-top: 20px;">
+        <button id="btn-show-form" class="btn-toggle">아기사자 추가하기</button>
+    </div>
+
+    <div id="input-form-container">
+        <div class="input-group"><label>이름</label><input type="text" id="input-name"></div>
+        <div class="input-group"><label>파트</label><input type="text" id="input-part"></div>
+        <div class="input-group"><label>관심 기술</label><input type="text" id="input-tech"></div>
+        <div class="input-group"><label>한줄 소개</label><input type="text" id="input-bio"></div>
+        <button id="btn-add" class="btn-submit">등록하기</button>
+    </div>
+
+    <div id="card-list" class="card-list"></div>
+</div>
+
+<script>
+    let members = [
+        {
+            id: Date.now(),
+            name: "이석희",
+            part: "프론트엔드",
+            tech: "HTML, Java",
+            bio: "개발에 많은 관심이 있는 학생입니다."
+        }
+    ];
+
+    const cardList = document.getElementById('card-list');
+    const totalCount = document.getElementById('total-count');
+    const formContainer = document.getElementById('input-form-container');
+    const btnShowForm = document.getElementById('btn-show-form');
+    const btnAdd = document.getElementById('btn-add');
+
+    function render() {
+        cardList.innerHTML = '';
+        totalCount.innerText = members.length;
+
+        members.forEach(member => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3>${member.name}</h3>
+                <p><strong>파트:</strong> ${member.part}</p>
+                <p><strong>관심 기술:</strong> ${member.tech}</p>
+                <p><strong>소개:</strong> ${member.bio}</p>
+                <button class="delete-btn" data-id="${member.id}">삭제</button>
+            `;
+            cardList.appendChild(card);
+        });
+    }
+
+    btnShowForm.addEventListener('click', () => {
+        const isVisible = formContainer.style.display === 'block';
+        formContainer.style.display = isVisible ? 'none' : 'block';
+        btnShowForm.innerText = isVisible ? '아기사자 추가하기' : '닫기';
+    });
+
+    btnAdd.addEventListener('click', () => {
+        const name = document.getElementById('input-name').value;
+        const part = document.getElementById('input-part').value;
+        const tech = document.getElementById('input-tech').value;
+        const bio = document.getElementById('input-bio').value;
+
+        if(!name || !part || !tech || !bio) {
+            alert('빈칸을 모두 채워주세요!');
+            return;
+        }
+
+        members.push({ id: Date.now(), name, part, tech, bio });
+        render();
+
+        document.querySelectorAll('input').forEach(input => input.value = '');
+        formContainer.style.display = 'none';
+        btnShowForm.innerText = '아기사자 추가하기';
+    });
+
+    cardList.addEventListener('click', (e) => {
+        if(e.target.classList.contains('delete-btn')) {
+            const id = Number(e.target.dataset.id);
+            members = members.filter(m => m.id !== id);
+            render();
+        }
+    });
+
+    render();
+</script>
+</body>
+</html>
